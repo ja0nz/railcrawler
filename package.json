@@ -1,0 +1,17 @@
+{
+  "name": "railcrawler",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack -w --target node main.js --output-filename main.bundled.js"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.1",
+    "futurize": "^1.2.0",
+    "node-fetch": "^1.7.1",
+    "ramda": "^0.24.1",
+    "ramda-fantasy": "^0.8.0",
+    "webpack": "^3.0.0"
+  }
+}
