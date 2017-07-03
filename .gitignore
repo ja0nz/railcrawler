@@ -1,4 +1,5 @@
 yarn.lock
+railPrices.csv
 queryString.js
 *.bundled.js
 node_modules
