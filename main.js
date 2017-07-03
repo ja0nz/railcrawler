@@ -5,6 +5,8 @@ import { bahnQs } from "./queryString";
 import { futurize } from "futurize";
 import { appendFile } from "fs";
 import { Future } from "ramda-fantasy";
+const fetch = futurize(Future)(execFile);
+const appendToFile = futurize(Future)(appendFile);
 import {
   replace,
   join,
@@ -21,6 +23,7 @@ import {
 const getDay = x => x * 86400000 + Date.now();
 const getDate = x => new Date(x);
 const getDateString = x => x.toLocaleDateString();
+const queryDate = compose(getDate, getDay);
 
 const composeQs = compose(
   bahnQs,
@@ -31,12 +34,7 @@ const composeQs = compose(
 );
 
 const main = day => {
-  const fetch = futurize(Future)(execFile);
-  const appendToFile = futurize(Future)(appendFile);
-  const urlQs = composeQs(day);
-  const queryDate = compose(getDate, getDay);
-
-  fetch(CHROMIUM, ["--headless", "--disable-gpu", "--dump-dom", urlQs])
+  fetch(CHROMIUM, ["--headless", "--disable-gpu", "--dump-dom", composeQs(day)])
     .map(cheerio.load)
     .map(dom => dom(".fareOutput").text().toString())
     .map(split(/\sEUR/g))
