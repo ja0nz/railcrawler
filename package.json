@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.1",
+    "folktale": "^2.0.0-rc1",
     "futurize": "^1.2.0",
     "node-fetch": "^1.7.1",
     "ramda": "^0.24.1",
