@@ -9,9 +9,11 @@ import { Future } from "ramda-fantasy";
 const fetch = futurize(Future)(execFile);
 const appendToFile = futurize(Future)(appendFile);
 import {
+  curry,
   replace,
   join,
   map,
+  flip,
   flatten,
   compose,
   split,
@@ -38,9 +40,15 @@ const composeQs = compose(
 const parse = dom => {
   const $ = cheerio.load(dom);
   return $(".firstrow").map((_, e) => {
-    const isEmpty = v => (v ? v : null);
-    const seq = map(x =>
-      Result.fromNullable(isEmpty($(".fareOutput", x, e).text()))
+    const isEmpty = v => v || null;
+    const queryHelper = curry((x, y) => $(".fareOutput", x, y));
+    const seq = map(
+      compose(
+        Result.fromNullable,
+        isEmpty,
+        invoker(0, "text"),
+        flip(queryHelper)(e)
+      )
     );
 
     const [red, std] = seq([".farePep", ".fareStd"]);
@@ -63,7 +71,9 @@ const main = day => {
     .map(prepend(new Date().toISOString()))
     .map(join(","))
     .chain(s => appendToFile("railPrices.csv", s + "\n"))
-    .fork(console.error, i => console.log(i));
+    .fork(console.error, _ =>
+      console.log(`Finished around ${100 / 30 * day} %`)
+    );
 };
 
 (async function run(day) {
